@@ -1,4 +1,4 @@
-import Application.Yatzy;
+import application.Yatzy;
 import org.junit.*;
 
 import java.util.List;
