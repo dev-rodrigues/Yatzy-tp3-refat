@@ -2,6 +2,7 @@ package application;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Yatzy {
 
@@ -22,12 +23,18 @@ public class Yatzy {
     }
 
     public static int yatzy(int... dice) {
-        int[] counts = new int[6];
-        for (int die : dice)
+        int[] counts = getEmptyArray();
+
+        for (int die : dice) {
             counts[die - 1]++;
-        for (int i = 0; i != 6; i++)
-            if (counts[i] == 5)
+        }
+
+        for (int i = 0; i != 6; i++) {
+            if (counts[i] == 5) {
                 return 50;
+            }
+        }
+
         return 0;
     }
 
@@ -54,8 +61,7 @@ public class Yatzy {
     }
 
     public static int threes(int d1, int d2, int d3, int d4, int d5) {
-        int s;
-        s = 0;
+        int s = 0;
         if (d1 == 3) s += 3;
         if (d2 == 3) s += 3;
         if (d3 == 3) s += 3;
@@ -82,28 +88,33 @@ public class Yatzy {
     }
 
     public int fives() {
-        int s = 0;
-        int i;
-        for (i = 0; i < dice.length; i++)
-            if (dice[i] == 5)
-                s = s + 5;
-        return s;
+        int sum = 0;
+        for (int die : dice)
+            if (die == 5) {
+                sum = sum + 5;
+            }
+        return sum;
     }
 
     public int sixes() {
         int sum = 0;
-        for (int die : dice)
-            if (die == 6)
+        for (int die : dice) {
+            if (die == 6) {
                 sum = sum + 6;
+            }
+        }
         return sum;
     }
 
     public static int scorePair(int d1, int d2, int d3, int d4, int d5) {
         var counts = counts(List.of(d1, d2, d3, d4, d5));
         int at;
-        for (at = 0; at != 6; at++)
-            if (counts[6 - at - 1] >= 2)
+
+        for (at = 0; at != 6; at++) {
+            if (counts[6 - at - 1] >= 2) {
                 return (6 - at) * 2;
+            }
+        }
         return 0;
     }
 
@@ -169,19 +180,25 @@ public class Yatzy {
             tallies[3] == 1 &&
             tallies[4] == 1)
             return 15;
+
         return 0;
     }
 
     public static int largeStraight(int d1, int d2, int d3, int d4, int d5) {
         int[] tallies = getTallies(Arrays.asList(d1, d2, d3, d4, d5));
 
-        if (tallies[1] == 1 &&
-            tallies[2] == 1 &&
-            tallies[3] == 1 &&
-            tallies[4] == 1
-            && tallies[5] == 1)
+        if (isAllValuesEqualsOne(tallies))
             return 20;
         return 0;
+    }
+
+    public static boolean isAllValuesEqualsOne(int[] tallies) {
+        var aux =  Arrays.stream(tallies).boxed().collect(Collectors.toList());
+        return aux.get(1) == 1 &&
+            aux.get(2) == 1 &&
+            aux.get(3) == 1 &&
+            aux.get(4) == 1 &&
+            aux.get(5) == 1;
     }
 
     public static int fullHouse(int d1, int d2, int d3, int d4, int d5) {
